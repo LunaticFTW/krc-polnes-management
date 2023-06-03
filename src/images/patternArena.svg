@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 284">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        fill: #2e3192;
+      }
+
+      .cls-3 {
+        fill: #fff200;
+      }
+
+      .cls-4 {
+        fill: #ed1c24;
+      }
+
+      .cls-5 {
+        fill: #231f20;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="cls-4" x="2" y="2" width="45" height="45"/>
+    <path class="cls-5" d="m47,2v45H2V2h45m2-2H0v49h49V0h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="49" y="2" width="45" height="45"/>
+    <path class="cls-5" d="m94,2v45h-45V2h45m2-2h-49v49h49V0h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="96" y="2" width="45" height="45"/>
+    <path class="cls-5" d="m141,2v45h-45V2h45m2-2h-49v49h49V0h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-2" x="143" y="2" width="45" height="45"/>
+    <path class="cls-5" d="m188,2v45h-45V2h45m2-2h-49v49h49V0h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-3" x="2" y="49" width="45" height="45" 
+    id="checkPointA1" onclick="checkpointA1.style.fill='orange';"/>
+    <path class="cls-5" d="m47,49v45H2v-45h45m2-2H0v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="49" y="49" width="45" height="45"/>
+    <path class="cls-5" d="m94,49v45h-45v-45h45m2-2h-49v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="96" y="49" width="45" height="45"/>
+    <path class="cls-5" d="m141,49v45h-45v-45h45m2-2h-49v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-3" x="143" y="49" width="45" height="45"
+    id="checkPointB1" onclick="checkpointB1.style.fill='orange';"/>
+    <path class="cls-5" d="m188,49v45h-45v-45h45m2-2h-49v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="2" y="96" width="45" height="45"/>
+    <path class="cls-5" d="m47,96v45H2v-45h45m2-2H0v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="49" y="96" width="45" height="45"/>
+    <path class="cls-5" d="m94,96v45h-45v-45h45m2-2h-49v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="96" y="96" width="45" height="45"/>
+    <path class="cls-5" d="m141,96v45h-45v-45h45m2-2h-49v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="143" y="96" width="45" height="45"/>
+    <path class="cls-5" d="m188,96v45h-45v-45h45m2-2h-49v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="2" y="143" width="45" height="45"/>
+    <path class="cls-5" d="m47,143v45H2v-45h45m2-2H0v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-3" x="49" y="143" width="45" height="45"
+    id="checkPointA2" onclick="checkpointA2.style.fill='orange';"/>
+    <path class="cls-5" d="m94,143v45h-45v-45h45m2-2h-49v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-3" x="96" y="143" width="45" height="45"
+    id="checkPointB2" onclick="checkpointB2.style.fill='orange';"/>
+    <path class="cls-5" d="m141,143v45h-45v-45h45m2-2h-49v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="143" y="143" width="45" height="45"/>
+    <path class="cls-5" d="m188,143v45h-45v-45h45m2-2h-49v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="2" y="190" width="45" height="45"/>
+    <path class="cls-5" d="m47,190v45H2v-45h45m2-2H0v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="49" y="190" width="45" height="45"/>
+    <path class="cls-5" d="m94,190v45h-45v-45h45m2-2h-49v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="96" y="190" width="45" height="45"/>
+    <path class="cls-5" d="m141,190v45h-45v-45h45m2-2h-49v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="143" y="190" width="45" height="45"/>
+    <path class="cls-5" d="m188,190v45h-45v-45h45m2-2h-49v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-3" x="2" y="237" width="45" height="45"
+    id="checkPointA3" onclick="checkpointA3.style.fill='orange';"/>
+    <path class="cls-5" d="m47,237v45H2v-45h45m2-2H0v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="49" y="237" width="45" height="45"/>
+    <path class="cls-5" d="m94,237v45h-45v-45h45m2-2h-49v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-1" x="96" y="237" width="45" height="45"/>
+    <path class="cls-5" d="m141,237v45h-45v-45h45m2-2h-49v49h49v-49h0Z"/>
+  </g>
+  <g>
+    <rect class="cls-3" x="143" y="237" width="45" height="45"
+    id="checkPointB3" onclick="checkpointB3.style.fill='orange';"/>
+    <path class="cls-5" d="m188,237v45h-45v-45h45m2-2h-49v49h49v-49h0Z"/>
+  </g>
+</svg>

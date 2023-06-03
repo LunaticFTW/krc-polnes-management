@@ -1,0 +1,98 @@
+{
+  "teams": [
+    {
+      "id": 1,
+      "name": "Adrian",
+      "community": "Eclipse",
+      "matches_history": []
+    },
+    {
+      "id": 2,
+      "name": "Buras",
+      "community": "Rainsten",
+      "matches_history": []
+    },
+    {
+      "id": 3,
+      "name": "Alaq Etam Robo",
+      "community": "Rainsten",
+      "matches_history": []
+    },
+    {
+      "id": 4,
+      "name": "Hanif",
+      "community": "TRK A",
+      "matches_history": []
+    },
+    {
+      "id": 5,
+      "name": "Kami",
+      "community": "Ada",
+      "matches_history": []
+    },
+    {
+      "id": 6,
+      "name": "Kryo",
+      "community": "RobotikTIPolnes",
+      "matches_history": []
+    },
+    {
+      "id": 7,
+      "name": "Roaxxy",
+      "community": "Rainsten",
+      "matches_history": []
+    }
+  ],
+  "matches": [
+    {
+      "id": 1,
+      "title": "PENYISIHAN 1 BABAK 1",
+      "team_a": 1,
+      "team_b": 2,
+      "match_result": []
+    },
+    {
+      "id": 2,
+      "title": "PENYISIHAN 1 BABAK 2",
+      "team_a": 2,
+      "team_b": 1,
+      "match_result": []
+    },
+    {
+      "id": 3,
+      "title": "PENYISIHAN 2 BABAK 1",
+      "team_a": 3,
+      "team_b": 1,
+      "match_result": []
+    },
+    {
+      "id": 4,
+      "title": "PENYISIHAN 2 BABAK 2",
+      "team_a": 1,
+      "team_b": 3,
+      "match_result": []
+    },
+    {
+      "id": 5,
+      "title": "KEJUARAAN NASIONAL",
+      "team_a": 3,
+      "team_b": 4,
+      "matchesHistory": []
+    },
+    {
+      "id": 6,
+      "title": "WORLD CHAMPIONSHIP",
+      "team_a": 3,
+      "team_b": 2,
+      "matchesHistory": []
+    },
+    {
+      "id": 7,
+      "title": "TINGKAT KABUPATEN",
+      "team_a": 2,
+      "team_b": 1,
+      "matchesHistory": []
+    }
+  ],
+  "rounds": []
+}
