@@ -4,13 +4,13 @@ import { getTeamsData } from "../scripts/teamControllers"
 import Navbar from "./Navbar"
 
 const Content = ({
-    isFinished,
     match,
     teamA,
     teamB,
 }) => {
   
   const [isRunning, setIsRunning] = useState(false)
+  const [isFinished, setIsFinished] = useState(false)
   const [time, setTime] = useState(0)
   const [timestamps, setTimestamps] = useState([])
   const [pointsTeamA, setPointsTeamA] = useState(0)
@@ -71,6 +71,7 @@ const Content = ({
             matchConfig={matchConfig}
             hotkeys={hotkeys}
             setIsRunning={setIsRunning}
+            setIsFinished={setIsFinished}
             setTime={setTime}
             setTimestamps={setTimestamps}
           />
@@ -79,7 +80,10 @@ const Content = ({
           </div>
         </div>
         <div className="h-full w-full flex justify-center py-32 -translate-y-6 scale-90">
-          <DroidCamFeed />
+          {isFinished ? (
+            <div className="bg-gray-200 h-full w-full">
+              
+            </div>) : (<DroidCamFeed />)}
         </div>
         <div className="w-full h-44 flex fixed bottom-0">
           <div className="bg-gray-200 w-1/3 z-10 h-full border-t-8 border-gray-300 flex">
@@ -136,10 +140,11 @@ const Stopwatch = ({
   checkpointsTeamA,
   checkpointsTeamB,
   matchConfig,
+  hotkeys,
   setIsRunning,
   setTime,
   setTimestamps,
-  hotkeys
+  setIsFinished
 }) => {
 
   useEffect(() => {
@@ -228,6 +233,7 @@ const Stopwatch = ({
   useEffect(() => {
     if ((checkpointsTeamA === matchConfig.maxCheckpoints && checkpointsTeamB === matchConfig.maxCheckpoints) || time >= matchConfig.maxElapsedTime) {
       setIsRunning(false);
+      setIsFinished(true)
     }
   }, [checkpointsTeamA, checkpointsTeamB, time]);
 
@@ -235,6 +241,7 @@ const Stopwatch = ({
     setTime(0);
     setIsRunning(false);
     setTimestamps([])
+    setIsFinished(false)
   };
 
   const formatTime = (time) => {
@@ -300,7 +307,8 @@ const Timestamps = ({ timestamps }) => {
 };
 
 const Pertandingan = ({
-    pageData
+    pageData,
+    movePage
 }) => {
     const [isFinished, setIsFinished] = useState(false)
     const [teamA, setTeamA] = useState([])
@@ -333,13 +341,12 @@ const Pertandingan = ({
     return (
         <div className="fixed inset-0 overflow-hidden h-screen bg-gray-50">
             {/* <Navbar 
-                title={match.title}
-                back={isFinished ? "daftar-pertandingan" : null}/> */}
+                title={match.title}*/}
             <Content 
-                isFinished={isFinished}
                 match={match}
                 teamA={teamA}
                 teamB={teamB} 
+                movePage={movePage}
             />
         </div>
     )
