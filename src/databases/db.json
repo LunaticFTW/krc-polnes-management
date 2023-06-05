@@ -92,6 +92,13 @@
       "team_a": 2,
       "team_b": 1,
       "matchesHistory": []
+    },
+    {
+      "id": 8,
+      "title": "PERSAHABATAN",
+      "team_a": 7,
+      "team_b": 6,
+      "matchesHistory": []
     }
   ],
   "rounds": []
