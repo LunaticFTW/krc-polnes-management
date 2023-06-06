@@ -63,8 +63,9 @@ const Content = ({
     }, [pointsTeamA, pointsTeamB, retriesTeamA, retriesTeamB])
 
     return (
-        <div className="w-screen h-screen overflow-scroll relative">
-            <div className="w-full justify-center flex text-gray-700 h-20 fixed top-0">
+        <div className="flex flex-col min-h-screen">
+            {/* Header */}
+            <div className="w-full flex justify-center text-gray-700 h-20 div-top">
                 <div className="text-5xl bg-red-600 text-white flex items-center justify-center font-bold w-1/3 text-center">
                     {teamA.name}
                 </div>
@@ -86,80 +87,86 @@ const Content = ({
                     {teamB.name}
                 </div>
             </div>
-            <div className="h-full w-full flex justify-center py-32 -translate-y-6 scale-90">
-                
-                {isFinished ? (
-                    <div className="bg-gray-200 h-full w-full">
-                        
-                    </div>) : (<DroidCamFeed />
+            
+            {/* Body */}
+            <div className="flex-grow overflow-y-auto w-full border-8 bg-gray-50 flex justify-center">
+                {!isFinished ? (
+                    <div>
+
+                    </div>
+                ) : (
+                    <DroidCamFeed />
                 )}
             </div>
-            
-            <div className="w-full h-48 flex fixed bottom-0">
-                <div className="bg-gray-200 w-1/3 z-10 h-full border-t-8 border-gray-300 flex">
-                    <div className=" w-1/3 h-full bg-red-600 flex items-center justify-center">
-                        <div className="text-white text-7xl font-black">{scoresTeamA}</div>
-                    </div>
-                    <div className="w-2/3 h-full flex flex-col">
-                        <div className="px-4 h-1/6 flex items-end">Checkpoints</div>
-                        <div className="px-4 h-1/6 w-3/4 flex items-center">
-                            <div className="bg-gray-50 rounded-full h-4 w-full">
-                                <div className="h-full rounded-lg bg-gray-700" style={checkpointsTeamA ? {width: `${(checkpointsTeamA/matchConfig.maxCheckpoints) * 100}%`} : {width: '5%'}}></div>
-                            </div>
-                            <div className="mx-5">
-                                {checkpointsTeamA}/{matchConfig.maxCheckpoints}
-                            </div>
+
+            {/* Footer */}
+            {!isFinished ? null : (
+                <div className="w-full h-48 flex div-bottom">
+                    <div className="bg-gray-200 w-1/3 z-10 h-full border-t-8 border-gray-300 flex">
+                        <div className=" w-1/3 h-full bg-red-600 flex items-center justify-center">
+                            <div className="text-white text-7xl font-black">{scoresTeamA}</div>
                         </div>
-                        <div className="px-4 h-1/6 flex items-end">Points</div>
-                        <div className="px-4 h-1/6 w-3/4 flex items-center">
-                            <div className="bg-gray-50 rounded-full h-4 w-full">
-                                <div className="h-full rounded-lg bg-green-600" style={pointsTeamA ? {width: `${(pointsTeamA/matchConfig.maxPoints) * 100}%`} : {width: '5%'}}></div>
-                            </div>
-                            <div className="mx-5">
-                                {pointsTeamA}/{matchConfig.maxPoints}
-                            </div>
-                        </div>
-                        <div className="px-4 h-1/6">Retries</div>
-                        <div className="px-4 h-1/6 w-3/4">
-                            <div className="font-bold text-2xl text-red-600">{retriesTeamA}</div>
-                        </div>
-                    </div>
-                </div>
-                <div className="bg-gray-50 w-1/3 z-10 h-full border-t-8 border-gray-300 py-5 px-2">
-                    <Timestamps timestamps={timestamps} matchConfig={matchConfig} />
-                </div>
-                <div className="bg-gray-200 w-1/3 z-10 h-full border-t-8 border-gray-300 flex">
-                    <div className="w-2/3 h-full flex justify-end">
-                        <div className="w-3/4 h-full flex-row">
+                        <div className="w-2/3 h-full flex flex-col">
                             <div className="px-4 h-1/6 flex items-end">Checkpoints</div>
-                            <div className="px-4 h-1/6 w-full flex items-center">
+                            <div className="px-4 h-1/6 w-3/4 flex items-center">
                                 <div className="bg-gray-50 rounded-full h-4 w-full">
-                                    <div className="h-full rounded-lg bg-gray-700" style={checkpointsTeamB ? {width: `${(checkpointsTeamB/matchConfig.maxCheckpoints) * 100}%`} : {width: '5%'}}></div>
+                                    <div className="h-full rounded-lg bg-gray-700" style={checkpointsTeamA ? {width: `${(checkpointsTeamA/matchConfig.maxCheckpoints) * 100}%`} : {width: '5%'}}></div>
                                 </div>
                                 <div className="mx-5">
-                                    {checkpointsTeamB}/{matchConfig.maxCheckpoints}
+                                    {checkpointsTeamA}/{matchConfig.maxCheckpoints}
                                 </div>
                             </div>
                             <div className="px-4 h-1/6 flex items-end">Points</div>
-                                <div className="px-4 h-1/6 w-full flex items-center">
-                                    <div className="bg-gray-50 rounded-full h-4 w-full">
-                                        <div className="h-full rounded-lg bg-green-600" style={pointsTeamB ? {width: `${(pointsTeamB/matchConfig.maxPoints) * 100}%`} : {width: '5%'}}></div>
-                                    </div>
-                                    <div className="mx-5">
-                                        {pointsTeamB}/{matchConfig.maxPoints}
-                                    </div>
+                            <div className="px-4 h-1/6 w-3/4 flex items-center">
+                                <div className="bg-gray-50 rounded-full h-4 w-full">
+                                    <div className="h-full rounded-lg bg-green-600" style={pointsTeamA ? {width: `${(pointsTeamA/matchConfig.maxPoints) * 100}%`} : {width: '5%'}}></div>
                                 </div>
+                                <div className="mx-5">
+                                    {pointsTeamA}/{matchConfig.maxPoints}
+                                </div>
+                            </div>
                             <div className="px-4 h-1/6">Retries</div>
-                            <div className="px-4 h-1/6 w-full">
-                            <div className="font-bold text-2xl text-red-600">{retriesTeamB}</div>
+                            <div className="px-4 h-1/6 w-3/4">
+                                <div className="font-bold text-2xl text-red-600">{retriesTeamA}</div>
                             </div>
                         </div>
                     </div>
-                    <div className=" w-1/3 h-full bg-blue-600 flex items-center justify-center">
-                        <div className="text-white text-7xl font-black">{scoresTeamB}</div>
+                    <div className="bg-gray-50 w-1/3 z-10 h-full border-t-8 border-gray-300 py-5 px-2">
+                        <Timestamps timestamps={timestamps} matchConfig={matchConfig} />
+                    </div>
+                    <div className="bg-gray-200 w-1/3 z-10 h-full border-t-8 border-gray-300 flex">
+                        <div className="w-2/3 h-full flex justify-end">
+                            <div className="w-3/4 h-full flex-row">
+                                <div className="px-4 h-1/6 flex items-end">Checkpoints</div>
+                                <div className="px-4 h-1/6 w-full flex items-center">
+                                    <div className="bg-gray-50 rounded-full h-4 w-full">
+                                        <div className="h-full rounded-lg bg-gray-700" style={checkpointsTeamB ? {width: `${(checkpointsTeamB/matchConfig.maxCheckpoints) * 100}%`} : {width: '5%'}}></div>
+                                    </div>
+                                    <div className="mx-5">
+                                        {checkpointsTeamB}/{matchConfig.maxCheckpoints}
+                                    </div>
+                                </div>
+                                <div className="px-4 h-1/6 flex items-end">Points</div>
+                                    <div className="px-4 h-1/6 w-full flex items-center">
+                                        <div className="bg-gray-50 rounded-full h-4 w-full">
+                                            <div className="h-full rounded-lg bg-green-600" style={pointsTeamB ? {width: `${(pointsTeamB/matchConfig.maxPoints) * 100}%`} : {width: '5%'}}></div>
+                                        </div>
+                                        <div className="mx-5">
+                                            {pointsTeamB}/{matchConfig.maxPoints}
+                                        </div>
+                                    </div>
+                                <div className="px-4 h-1/6">Retries</div>
+                                <div className="px-4 h-1/6 w-full">
+                                <div className="font-bold text-2xl text-red-600">{retriesTeamB}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className=" w-1/3 h-full bg-blue-600 flex items-center justify-center">
+                            <div className="text-white text-7xl font-black">{scoresTeamB}</div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     )
 }
@@ -292,6 +299,36 @@ const Stopwatch = ({
 }
 
 const DroidCamFeed = () => {
+
+    useEffect(() => {
+        const videoElement = videoRef.current
+      
+        const handleResize = () => {
+            const height = window.innerHeight - 80 - 192 - 30
+            if (videoElement) {
+                videoElement.style.height = `${height}px`
+            }
+        };
+      
+        const handleVideoLoadedMetadata = () => {
+            handleResize()
+        };
+      
+        // Attach the event listener to the window
+        window.addEventListener('resize', handleResize)
+        if (videoElement) {
+            videoElement.addEventListener('loadedmetadata', handleVideoLoadedMetadata)
+        }
+      
+        // Clean up the event listener when the component is unmounted
+        return () => {
+            window.removeEventListener('resize', handleResize)
+            if (videoElement) {
+                videoElement.removeEventListener('loadedmetadata', handleVideoLoadedMetadata)
+            }
+        }
+      }, [])
+
     const videoRef = useRef(null)
   
     useEffect(() => {
@@ -306,8 +343,8 @@ const DroidCamFeed = () => {
     }, [])
   
     return (
-        <div className="w-4/6">
-            <video ref={videoRef} autoPlay playsInline className="h-full w-full object-cover" />
+        <div className="border-8 flex justify-center">
+            <video ref={videoRef} autoPlay playsInline className="w-full" />
         </div>
     )
 }
