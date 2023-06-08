@@ -29,7 +29,8 @@ const Content = ({
         scorePerRetry: -0.5,
         maxCheckpoints: 4,
         maxPoints: 6,
-        maxElapsedTime: 10000
+        maxElapsedTime: 10000,
+        preparationTime: 5000
     }
     const hotkeys = {
         startStop: "Space",
@@ -132,23 +133,23 @@ const Content = ({
             </div>
             
             {/* Body */}
-            <div className="flex-grow overflow-y-auto w-full border-8 bg-gray-50 flex justify-center">
+            <div className="h-full overflow-y-auto w-full border-8 bg-gray-50 flex justify-center">
                 {isFinished ? (
                     <div className="py-10 bg-gray-100 w-full flex justify-center">
                         <div className="w-1/4 bg-white overflow-scroll flex justify-center">
                             <Timestamps timestamps={timestamps} matchConfig={matchConfig} team={"A"} />   
                         </div>
                         <table className="flex-row w-2/4 text-3xl">
-                            <tr className="h-24">
+                            <tr className="h-24 ">
                                 <td className="w-1/3">
                                     <div className="flex justify-center">
-                                        {winner ? (winner === teamA.id ? <CrownSVG className={"h-12 w-12"}/> : null) : "DRAW"}
+                                        {winner ? (winner === teamA.id ? <CrownSVG className={"h-10 w-10"}/> : null) : "DRAW"}
                                     </div>
                                 </td>
                                 <th className="w-1/3">WINNER</th>
                                 <td className="w-1/3">
                                     <div className="flex justify-center">
-                                        {winner ? (winner === teamB.id ? <CrownSVG className={"h-12 w-12"}/> : null) : "DRAW"}
+                                        {winner ? (winner === teamB.id ? <CrownSVG className={"h-10 w-10"}/> : null) : "DRAW"}
                                     </div>
                                 </td>
                             </tr>
@@ -219,7 +220,7 @@ const Content = ({
                             </tr>
                         </table>
                         <div className="w-1/4 bg-white overflow-scroll flex justify-center">
-                            <Timestamps timestamps={timestamps} matchConfig={matchConfig} team={"B"} />   
+                            <Timestamps timestamps={timestamps} matchConfig={matchConfig} team={"B"} />
                         </div>
                     </div>
                 ) : (
@@ -316,17 +317,43 @@ const Stopwatch = ({
     setTeamAFinishTime,
     setTeamBFinishTime
 }) => {
+    const [timerType, setTimerType] = useState('Countdown');
+
     useEffect(() => {
-        let timer = null
-        if (isRunning && time < matchConfig.maxElapsedTime && (checkpointsTeamA < matchConfig.maxCheckpoints || checkpointsTeamB < matchConfig.maxCheckpoints)) {
+        let timer = null;
+    
+        if (timerType === 'Countdown' && isRunning) {
+          if (time === matchConfig.preparationTime) {
+            setTimerType('StartCount');
+            setTime(0);
+            setIsRunning(true);
+          } else {
             timer = setInterval(() => {
-                setTime((prevTime) => prevTime + 10)
-            }, 10)
+              setTime((prevTime) => prevTime + 10);
+            }, 10);
+          }
+        } else if (timerType === 'StartCount' && isRunning) {
+            if (time === 3000) {
+              setTimerType('Stopwatch');
+              setTime(0);
+              setIsRunning(true);
+            } else {
+              timer = setInterval(() => {
+                setTime((prevTime) => prevTime + 10);
+              }, 10);
+            }
+        
+        } else if (timerType === 'Stopwatch' && isRunning && time < matchConfig.maxElapsedTime && (checkpointsTeamA < matchConfig.maxCheckpoints || checkpointsTeamB < matchConfig.maxCheckpoints)) {
+          timer = setInterval(() => {
+            setTime((prevTime) => prevTime + 10);
+          }, 10);
         }
+    
         return () => {
-            clearInterval(timer)
-        }
-    }, [isRunning, time, checkpointsTeamA, checkpointsTeamB])
+          clearInterval(timer);
+        };
+
+      }, [timerType, time, isRunning]);
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -340,7 +367,7 @@ const Stopwatch = ({
                 }
             } else if (event.code === hotkeys.checkpointA && event.target === document.body) {
                 event.preventDefault()
-                if (isRunning && (checkpointsTeamA < matchConfig.maxCheckpoints)) {
+                if (isRunning && (checkpointsTeamA < matchConfig.maxCheckpoints && timerType === "Stopwatch")) {
                     setTimestamps((prevTimestamps) => [
                         ...prevTimestamps,
                         {team:"A", type:'checkpoint', time:formatTime(time)},
@@ -348,7 +375,7 @@ const Stopwatch = ({
                 }
             } else if (event.code === hotkeys.checkpointB && event.target === document.body) {
                 event.preventDefault()
-                if (isRunning && (checkpointsTeamB < matchConfig.maxCheckpoints)) {
+                if (isRunning && (checkpointsTeamB < matchConfig.maxCheckpoints && timerType === "Stopwatch")) {
                     setTimestamps((prevTimestamps) => [
                         ...prevTimestamps,
                         {team:"B", type:'checkpoint', time:formatTime(time)},
@@ -356,7 +383,7 @@ const Stopwatch = ({
                 }
             } else if (event.code === hotkeys.pointA && event.target === document.body) {
                 event.preventDefault()
-                if (isRunning && pointsTeamA < matchConfig.maxPoints) {
+                if (isRunning && pointsTeamA < matchConfig.maxPoints && timerType === "Stopwatch") {
                     setTimestamps((prevTimestamps) => [
                         ...prevTimestamps,
                         {team:"A", type:'point', time:formatTime(time)},
@@ -364,7 +391,7 @@ const Stopwatch = ({
                 }
             } else if (event.code === hotkeys.pointB && event.target === document.body) {
                 event.preventDefault()
-                if (isRunning && pointsTeamB < matchConfig.maxPoints) {
+                if (isRunning && pointsTeamB < matchConfig.maxPoints && timerType === "Stopwatch" ) {
                     setTimestamps((prevTimestamps) => [
                         ...prevTimestamps,
                         {team:"B", type:'point', time:formatTime(time)},
@@ -372,7 +399,7 @@ const Stopwatch = ({
                 }
             } else if (event.code === hotkeys.retryA && event.target === document.body) {
                 event.preventDefault()
-                if (isRunning) {
+                if (isRunning && timerType === "Stopwatch") {
                     setTimestamps((prevTimestamps) => [
                         ...prevTimestamps,
                         {team:"A", type:'retry', time:formatTime(time)},
@@ -380,7 +407,7 @@ const Stopwatch = ({
                 }
             } else if (event.code === hotkeys.retryB && event.target === document.body) {
                 event.preventDefault()
-                if (isRunning) {
+                if (isRunning && timerType === "Stopwatch") {
                     setTimestamps((prevTimestamps) => [
                         ...prevTimestamps,
                         {team:"B", type:'retry', time:formatTime(time)},
@@ -409,6 +436,7 @@ const Stopwatch = ({
         setTime(0)
         setIsRunning(false)
         setTimestamps([])
+        setTimerType("Countdown")
         setIsFinished(false)
         setTeamAFinishTime(0)
         setTeamBFinishTime(0)
@@ -425,7 +453,7 @@ const Stopwatch = ({
     
     return (
         <div className="z-10 w-1/3 flex justify-center items-center h-24 bg-yellow-300">
-            <div className="text-7xl font-bold tracking-widest">{isFinished ? "VS" : formatTime(time)}</div>
+            <div className="text-7xl font-bold tracking-widest">{isFinished ? "VS" : (timerType === "Countdown" ? formatTime(matchConfig.preparationTime - time) : (timerType === "StartCount" ? Math.ceil(3 - time/1000) : formatTime(time)))}</div>
         </div>
     )
 }
