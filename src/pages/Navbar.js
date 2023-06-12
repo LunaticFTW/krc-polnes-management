@@ -5,7 +5,7 @@ const Navbar = ({title, back})=> {
     
     return (
         <div className={navbarContainerStyle} >
-            <div className={navbarTitleContainerStyle}>
+            <div className={title ? navbarTitleContainerStyle : null}>
                 <p className={navbarTitleStyle}>{title}</p>
             </div>
             <div className={navbarBackButtonContainerStyle}>

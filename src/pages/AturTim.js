@@ -16,7 +16,7 @@ const Content = () => {
         }
 
         fetchTeams()
-    }, [teams])
+    }, [])
 
     useEffect(() => {
         const fetchMatches = async () => {
@@ -25,7 +25,7 @@ const Content = () => {
         }
 
         fetchMatches()
-    }, [matches])
+    }, [])
 
     return (
         <div className="w-screen h-4/5 overflow-scroll">
@@ -93,7 +93,7 @@ const TeamsTable = ({
         <div>
             <div>
                 <table 
-                    className="min-w-full divide-y divide-gray-200">
+                    className="min-w-full divide-y divide-gray-200 h-full overflow-scroll">
                     <thead>
                         <tr>
                             <th className={"px-6 py-3 w-1/12 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-widest"}>

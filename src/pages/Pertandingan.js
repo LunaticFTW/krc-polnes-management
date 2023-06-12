@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { getMatchesData } from "../scripts/matchControllers"
+import { getMatchesData, updateMatchData } from "../scripts/matchControllers"
 import { getTeamsData } from "../scripts/teamControllers"
 import Navbar from "./Navbar"
 import CrownSVG from "../images/crown"
@@ -8,6 +8,7 @@ const Content = ({
     match,
     teamA,
     teamB,
+    movePage
 }) => {
     const [isRunning, setIsRunning] = useState(false)
     const [isFinished, setIsFinished] = useState(false)
@@ -24,6 +25,7 @@ const Content = ({
     const [winner, setWinner] = useState(0)
     const [teamAFinishTime, setTeamAFinishTime] = useState(0)
     const [teamBFinishTime, setTeamBFinishTime] = useState(0)
+
     const matchConfig = {
         scorePerPoint: 5,
         scorePerRetry: -0.5,
@@ -101,10 +103,31 @@ const Content = ({
             }
 
         }
-      }, [isFinished, scoresTeamA, scoresTeamB]);
+    }, [isFinished, scoresTeamA, scoresTeamB]);
+
+    const handleSave = async () => {
+        console.info("Saved")
+        const result = [{
+            "winner": winner,
+            "teamAFinishTime": teamAFinishTime,
+            "teamBFinishTime": teamBFinishTime,
+            "pointsTeamA": pointsTeamA,
+            "pointsTeamB": pointsTeamB,
+            "checkpointsTeamA": checkpointsTeamA,
+            "checkpointsTeamB": checkpointsTeamB,
+            "retriesTeamA": retriesTeamA,
+            "retriesTeamB": retriesTeamB,
+            "scoresTeamA": scoresTeamA,
+            "scoresTeamB": scoresTeamB,
+            "timestamps": timestamps
+        }]
+        match.match_result = result
+        await updateMatchData(match.id, match)
+        movePage('daftar-pertandingan')
+    }
 
     return (
-        <div className="flex flex-col min-h-screen overflow-scroll">
+        <div className={`flex flex-col ${isFinished ? 'h-screen' : 'min-h-screen'}`}>
             {/* Header */}
             <div className="w-full flex justify-center text-gray-700 h-20 div-top">
                 <div className="text-5xl bg-red-600 text-white flex items-center justify-center font-bold w-1/3 text-center">
@@ -133,106 +156,116 @@ const Content = ({
             </div>
 
             {isFinished ? (
-                <div className="py-10 bg-gray-100 w-full flex justify-center">
-                    <div className="w-1/4 h-full bg-white">
-                        {timestamps.filter((timestamp) => timestamp.team === 'A').map((timestamp) => (
-                            <React.Fragment key={timestamp.time}>
-                                <span className="bg-red-600 rounded-lg px-2 mx-4 font-bold text-white text-sm">[ TEAM {timestamp.team} ] </span>
-                                <span className={timestamp.type === 'point' ? "text-green-600 font-bold tracking-widest" : timestamp.type === 'retry' ? "text-red-600 font-bold tracking-widest" : "font-bold tracking-widest"}>
-                                    {timestamp.time} {timestamp.type === 'point' ? "+" + matchConfig.scorePerPoint : timestamp.type === 'retry' ? matchConfig.scorePerRetry : null} <br />
-                                </span>
-                            </React.Fragment>
-                        ))}
+                <div className="py-10 bg-gray-100 w-full h-full flex justify-center overflow-scroll">
+                    <div className="w-1/4 bg-white-100 px-10 flex justify-center">
+                        <div>
+                            {timestamps.filter((timestamp) => timestamp.team === 'A').map((timestamp) => (
+                                <React.Fragment key={timestamp.time}>
+                                    <span className="bg-red-600 rounded-lg px-2 mx-4 font-bold text-white text-sm">[ TEAM {timestamp.team} ] </span>
+                                    <span className={timestamp.type === 'point' ? "text-green-600 font-bold tracking-widest" : timestamp.type === 'retry' ? "text-red-600 font-bold tracking-widest" : "font-bold tracking-widest"}>
+                                        {timestamp.time} {timestamp.type === 'point' ? "+" + matchConfig.scorePerPoint : timestamp.type === 'retry' ? matchConfig.scorePerRetry : null} <br />
+                                    </span>
+                                </React.Fragment>
+                            ))}
+                        </div>
                     </div>
-                    <table className="flex-row w-2/4 text-3xl">
-                        <tr className="h-24 ">
-                            <td className="w-1/3">
+                    <div className="flex-row w-2/4 text-3xl">
+                        <table>
+                            <tr className="h-24">
+                                <td className="w-1/3">
+                                    <div className="flex justify-center">
+                                        {winner ? (winner === teamA.id ? <CrownSVG className={"h-12 w-12"}/> : null) : "DRAW"}
+                                    </div>
+                                </td>
+                                <th className="w-1/3">WINNER</th>
+                                <td className="w-1/3">
+                                    <div className="flex justify-center">
+                                        {winner ? (winner === teamB.id ? <CrownSVG className={"h-12 w-12"}/> : null) : "DRAW"}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr className="h-24">
+                                <td>
+                                    <div className="flex justify-center">
+                                        {teamAFinishTime ? teamAFinishTime : "DNF"}
+                                    </div>
+                                </td>
+                                <th>WAKTU FINISH</th>
+                                <td>
+                                    <div className="flex justify-center">
+                                        {teamBFinishTime ? teamBFinishTime : "DNF"}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr className="h-24">
+                                <td>
+                                    <div className="flex justify-center">
+                                        {pointsTeamA} / {matchConfig.maxPoints}
+                                    </div>
+                                </td>
+                                <th>POIN DIAMBIL</th>
+                                <td>
+                                    <div className="flex justify-center">
+                                        {pointsTeamB} / {matchConfig.maxPoints}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr className="h-24">
+                                <td>
+                                    <div className="flex justify-center">
+                                        {checkpointsTeamA} / {matchConfig.maxCheckpoints}
+                                    </div>
+                                </td>
+                                <th>CHECKPOINT DIAMBIL</th>
+                                <td>
+                                    <div className="flex justify-center">
+                                        {checkpointsTeamB} / {matchConfig.maxCheckpoints}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr className="h-24">
+                                <td>
+                                    <div className="flex justify-center">
+                                        {retriesTeamA}
+                                    </div>
+                                </td>
+                                <th>JUMLAH RETRY</th>
+                                <td>
+                                    <div className="flex justify-center">
+                                        {retriesTeamB}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr className="h-24">
+                                <td>
+                                    <div className="flex justify-center">
+                                        {scoresTeamA}
+                                    </div>
+                                </td>
+                                <th>SCORE AKHIR</th>
+                                <td>
                                 <div className="flex justify-center">
-                                    {winner ? (winner === teamA.id ? <CrownSVG className={"h-10 w-10"}/> : null) : "DRAW"}
-                                </div>
-                            </td>
-                            <th className="w-1/3">WINNER</th>
-                            <td className="w-1/3">
-                                <div className="flex justify-center">
-                                    {winner ? (winner === teamB.id ? <CrownSVG className={"h-10 w-10"}/> : null) : "DRAW"}
-                                </div>
-                            </td>
-                        </tr>
-                        <tr className="h-24">
-                            <td>
-                                <div className="flex justify-center">
-                                    {teamAFinishTime ? teamAFinishTime : "DNF"}
-                                </div>
-                            </td>
-                            <th>WAKTU FINISH</th>
-                            <td>
-                                <div className="flex justify-center">
-                                    {teamBFinishTime ? teamBFinishTime : "DNF"}
-                                </div>
-                            </td>
-                        </tr>
-                        <tr className="h-24">
-                            <td>
-                                <div className="flex justify-center">
-                                    {pointsTeamA} / {matchConfig.maxPoints}
-                                </div>
-                            </td>
-                            <th>POIN DIAMBIL</th>
-                            <td>
-                                <div className="flex justify-center">
-                                    {pointsTeamB} / {matchConfig.maxPoints}
-                                </div>
-                            </td>
-                        </tr>
-                        <tr className="h-24">
-                            <td>
-                                <div className="flex justify-center">
-                                    {checkpointsTeamA} / {matchConfig.maxCheckpoints}
-                                </div>
-                            </td>
-                            <th>CHECKPOIN DIAMBIL</th>
-                            <td>
-                                <div className="flex justify-center">
-                                    {checkpointsTeamB} / {matchConfig.maxCheckpoints}
-                                </div>
-                            </td>
-                        </tr>
-                        <tr className="h-24">
-                            <td>
-                                <div className="flex justify-center">
-                                    {retriesTeamA}
-                                </div>
-                            </td>
-                            <th>JUMLAH RETRY</th>
-                            <td>
-                                <div className="flex justify-center">
-                                    {retriesTeamB}
-                                </div>
-                            </td>
-                        </tr>
-                        <tr className="h-24">
-                            <td>
-                                <div className="flex justify-center">
-                                    {scoresTeamA}
-                                </div>
-                            </td>
-                            <th>SCORE AKHIR</th>
-                            <td>
-                            <div className="flex justify-center">
-                                    {scoresTeamB}
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                    <div className="w-1/4 h-96 bg-white overflow-scroll">
-                        {timestamps.filter((timestamp) => timestamp.team === 'B').map((timestamp) => (
-                            <React.Fragment key={timestamp.time}>
-                                <span className="bg-blue-600 rounded-lg px-2 mx-4 font-bold text-white text-sm ">[ TEAM {timestamp.team} ] </span>
-                                <span className={timestamp.type === 'point' ? "text-green-600 font-bold tracking-widest" : timestamp.type === 'retry' ? "text-red-600 font-bold tracking-widest" : "font-bold tracking-widest"}>
-                                    {timestamp.time} {timestamp.type === 'point' ? "+" + matchConfig.scorePerPoint : timestamp.type === 'retry' ? matchConfig.scorePerRetry : null} <br />
-                                </span>
-                            </React.Fragment>
-                        ))}
+                                        {scoresTeamB}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div className="flex justify-center w-full py-10">
+                            <button className="bg-blue-500 font-bold text-white rounded-xl px-4 py-2 mx-4" onClick={() => handleSave()}>SIMPAN</button>
+                            <button className="bg-red-600 font-bold text-white rounded-xl px-4 py-2 mx-4">ULANG</button>
+                        </div>
+                    </div>
+                    <div className="w-1/4 bg-white-100 px-10 flex justify-center">
+                        <div>
+                            {timestamps.filter((timestamp) => timestamp.team === 'B').map((timestamp) => (
+                                <React.Fragment key={timestamp.time}>
+                                    <span className="bg-blue-600 rounded-lg px-2 mx-4 font-bold text-white text-sm ">[ TEAM {timestamp.team} ] </span>
+                                    <span className={timestamp.type === 'point' ? "text-green-600 font-bold tracking-widest" : timestamp.type === 'retry' ? "text-red-600 font-bold tracking-widest" : "font-bold tracking-widest"}>
+                                        {timestamp.time} {timestamp.type === 'point' ? "+" + matchConfig.scorePerPoint : timestamp.type === 'retry' ? matchConfig.scorePerRetry : null} <br />
+                                    </span>
+                                </React.Fragment>
+                            ))}
+                        </div>
                     </div>
                 </div>
             ) : (

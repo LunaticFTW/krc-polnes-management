@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import Navbar from "./Navbar"
 import { getMatchesData, deleteMatch, getKeys, getLatestMatchId, getLatestMatchCount, addMatch } from "../scripts/matchControllers"
 import { getTeamsData, getLatestTeamCount } from "../scripts/teamControllers"
+import CrownSVG from "../images/crown"
 
 const Content = ({movePage}) => {
     const [teams, setTeams] = useState([])
@@ -29,7 +30,7 @@ const Content = ({movePage}) => {
                 title: title,
                 team_a: parseInt(teamA),
                 team_b: parseInt(teamB),
-                matchesHistory: []
+                match_result: []
             }
     
             console.info(newMatch)
@@ -167,11 +168,39 @@ const MatchesTable = ({
                                 <tr className="bg-gray-50 hover:bg-gray-200">
                                     <td className="px-6 py-4 whitespace-nowrap">{match.id}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">{match.title}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">{getTeamName(match.team_a, teams)}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">{getTeamName(match.team_b, teams)}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        {match.match_result[0] ? 
+                                            <div className="flex items-center">
+                                                <div>
+                                                    {getTeamName(match.team_a, teams)}
+                                                </div>
+                                                <div className="mx-5 px-2 py-2 rounded-xl bg-red-600 text-white font-bold">
+                                                    {match.match_result[0].scoresTeamA} Pts
+                                                </div>
+                                                <div className="">
+                                                    {match.match_result[0].winner === match.team_a ? <CrownSVG className={"w-12"} /> : null}
+                                                </div>
+                                            </div>
+                                        : getTeamName(match.team_a, teams)}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        {match.match_result[0] ? 
+                                            <div className="flex items-center">
+                                                <div>
+                                                    {getTeamName(match.team_b, teams)}
+                                                </div>
+                                                <div className="mx-5 px-2 py-2 rounded-xl bg-blue-500 text-white font-bold">
+                                                    {match.match_result[0].scoresTeamB} Pts
+                                                </div>
+                                                <div className="">
+                                                    {match.match_result[0].winner === match.team_b ? <CrownSVG className={"w-12"} /> : null}
+                                                </div>
+                                            </div>
+                                        : getTeamName(match.team_a, teams)}
+                                        </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-center">
-                                        {match.match_history ? (
-                                            <button className="text-white font-bold rounded-xl bg-red-600 py-2 px-4 mx-2" onClick={""}>
+                                        {match.match_result[0] ? (
+                                            <button className="text-white font-bold rounded-xl bg-green-600 py-2 px-4 mx-2" onClick={() => movePage('hasil-pertandingan', match.id)}>
                                                 Hasil
                                             </button>
                                         ) : (
