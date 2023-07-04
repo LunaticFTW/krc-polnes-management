@@ -1,70 +1,34 @@
-# Getting Started with Create React App
+# Aplikasi Manajemen KRC
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Aplikasi ini digunakan untuk manajemen tim dan pertandingan perlombaan Kontes Robot Cerdas yang diadakan di Politeknik Negeri Samarinda.
 
-## Available Scripts
+## Requirement
 
-In the project directory, you can run:
+Aplikasi ini membutuhkan NodeJS yang bisa diunduh di sini <https://nodejs.org/en/download/>.
 
-### `npm start`
+## Instalasi
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+* Unduh dan ekstrak zip dari repository ini.
+* Jalankan ``` install.bat ``` atau jalankan perintah berikut pada command prompt.
+    ``` 
+    npm install 
+    ```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+    **Pastikan sudah menginstal NodeJS terlebih dahulu dan jangan lupa untuk memulai dari direktori utama aplikasi!**
 
-### `npm test`
+## Memulai Aplikasi
+Jalankan ``` run.bat ``` atau bisa menjalankan perintah berikut secara manual pada command prompt.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Menyiapkan Database
 
-### `npm run build`
+```
+npm run start-db
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Menyiapkan Aplikasi
+```
+npm run start-app
+``` 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Menutup Aplikasi
+Dapat dilakukan dengan cara menghentikan terminal atau command prompt, aplikasi dan database akan nonaktif secara otomatis.
