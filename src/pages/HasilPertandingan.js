@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import Navbar from "./Navbar"
-import { getMatchesData } from "../scripts/matchControllers"
-import { getTeamsData } from "../scripts/teamControllers"
+import { getMatchesData } from "../Controllers/matchControllers"
+import { getTeamsData } from "../Controllers/teamControllers"
 import CrownSVG from "../images/crown"
 
 const HasilPertandingan = ({

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import Navbar from "./Navbar"
-import { getTeamsData, addTeam, updateTeamData, deleteTeam, getLatestTeamId } from "../scripts/teamControllers"
-import { getMatchesData } from "../scripts/matchControllers"
+import { getTeamsData, addTeam, updateTeamData, deleteTeam, getLatestTeamId } from "../Controllers/teamControllers"
+import { getMatchesData } from "../Controllers/matchControllers"
 
 const Content = () => {
     const [teams, setTeams] = useState([])
@@ -277,10 +277,10 @@ const RowOnEditing = ({
             </td>
             <td className="px-6 py-4 w-3/12 whitespace-nowrap bg-gray-400">
                 <input 
-                className="rounded-xl px-4" 
-                type="text" 
-                value={community}
-                onChange={(e) => setCommunity(e.target.value)}/>
+                    className="rounded-xl px-4" 
+                    type="text" 
+                    value={community}
+                    onChange={(e) => setCommunity(e.target.value)}/>
             </td>
             <td className="px-6 py-4 w-3/12 whitespace-nowrap bg-gray-400">{team.matches_history}</td>
             <td className="px-6 py-4 w-2/12 whitespace-nowrap bg-gray-400">

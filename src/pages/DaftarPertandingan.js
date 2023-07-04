@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import Navbar from "./Navbar"
-import { getMatchesData, deleteMatch, getKeys, getLatestMatchId, getLatestMatchCount, addMatch } from "../scripts/matchControllers"
-import { getTeamsData, getLatestTeamCount } from "../scripts/teamControllers"
+import { getMatchesData, deleteMatch, getKeys, getLatestMatchId, getLatestMatchCount, addMatch } from "../Controllers/matchControllers"
+import { getTeamsData, getLatestTeamCount } from "../Controllers/teamControllers"
 import CrownSVG from "../images/crown"
 
 const Content = ({movePage}) => {

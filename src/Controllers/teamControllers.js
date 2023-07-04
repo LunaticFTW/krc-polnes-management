@@ -1,4 +1,4 @@
-const apiUrl = "http://localhost:3030/teams"
+const apiUrl = "http://localhost:3090/teams"
 
 export const getTeamsData = async (teamId) => {
     let url = `${apiUrl}`

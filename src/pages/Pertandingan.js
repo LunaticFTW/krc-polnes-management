@@ -1,13 +1,16 @@
 import React, { useEffect, useRef, useState } from "react"
-import { getMatchesData, updateMatchData } from "../scripts/matchControllers"
-import { getTeamsData, updateTeamData } from "../scripts/teamControllers"
+import { getMatchesData, updateMatchData } from "../Controllers/matchControllers"
+import { getTeamsData, updateTeamData } from "../Controllers/teamControllers"
+import { getSettings } from "../Controllers/settingController"
 import CrownSVG from "../images/crown"
 
 const Content = ({
     match,
     teamA,
     teamB,
-    movePage
+    movePage,
+    matchConfig,
+    hotkeys
 }) => {
     const [isRunning, setIsRunning] = useState(false)
     const [isFinished, setIsFinished] = useState(false)
@@ -24,26 +27,7 @@ const Content = ({
     const [winner, setWinner] = useState(0)
     const [teamAFinishTime, setTeamAFinishTime] = useState(0)
     const [teamBFinishTime, setTeamBFinishTime] = useState(0)
-    const [timerType, setTimerType] = useState('Countdown');
-
-    const matchConfig = {
-        scorePerPoint: 5,
-        scorePerRetry: -0.5,
-        maxCheckpoints: 4,
-        maxPoints: 6,
-        maxElapsedTime: 10000,
-        preparationTime: 5000
-    }
-    const hotkeys = {
-        startStop: "Space",
-        reset: "KeyR",
-        checkpointA: "KeyA",
-        pointA: "KeyS",
-        retryA: "KeyD",
-        checkpointB: "KeyJ",
-        pointB: "KeyK",
-        retryB: "KeyL",
-    }
+    const [timerType, setTimerType] = useState('Countdown')
 
     useEffect(() => {
         const checkpointCountTeamA = timestamps.reduce((count, timestamp) => timestamp.type === 'checkpoint' && timestamp.team === "A" ? count+1 : count, 0)
@@ -67,7 +51,7 @@ const Content = ({
         setScoresTeamA(calculatedScoreTeamA)
         setScoresTeamB(calculatedScoreTeamB)
     
-    }, [pointsTeamA, pointsTeamB, retriesTeamA, retriesTeamB])
+    }, [matchConfig, pointsTeamA, pointsTeamB, retriesTeamA, retriesTeamB])
 
     useEffect(() => {
         if (isFinished) {
@@ -141,229 +125,232 @@ const Content = ({
         setTeamBFinishTime(0)
     }
 
-    return (
-        <div className={`flex flex-col ${isFinished ? 'h-screen' : 'min-h-screen'}`}>
-            {/* Header */}
-            <div className="w-full flex justify-center text-gray-700 h-20 div-top">
-                <div className="text-5xl bg-red-600 text-white flex items-center justify-center font-bold w-1/3 text-center">
-                    {teamA.name}
-                </div>
-                <Stopwatch 
-                    isRunning={isRunning}
-                    isFinished={isFinished}
-                    time={time}
-                    timerType={timerType}
-                    pointsTeamA={pointsTeamA}
-                    pointsTeamB={pointsTeamB}
-                    checkpointsTeamA={checkpointsTeamA}
-                    checkpointsTeamB={checkpointsTeamB}
-                    matchConfig={matchConfig}
-                    hotkeys={hotkeys}
-                    setIsRunning={setIsRunning}
-                    setIsFinished={setIsFinished}
-                    setTime={setTime}
-                    setTimerType={setTimerType}
-                    setTimestamps={setTimestamps}
-                    setTeamAFinishTime={setTeamAFinishTime}
-                    setTeamBFinishTime={setTeamBFinishTime}
-                    handleReset={handleReset}
-                />
-                <div className="text-5xl bg-blue-600 text-white flex items-center justify-center font-bold w-1/3 text-center">
-                    {teamB.name}
-                </div>
-            </div>
-
-            {isFinished ? (
-                <div className="py-10 bg-gray-100 w-full h-full flex justify-center overflow-scroll">
-                    <div className="w-1/4 bg-white-100 px-10 flex justify-center">
-                        <div>
-                            {timestamps.filter((timestamp) => timestamp.team === 'A').map((timestamp) => (
-                                <React.Fragment key={timestamp.time}>
-                                    <span className="bg-red-600 rounded-lg px-2 mx-4 font-bold text-white text-sm">[ TEAM {timestamp.team} ] </span>
-                                    <span className={timestamp.type === 'point' ? "text-green-600 font-bold tracking-widest" : timestamp.type === 'retry' ? "text-red-600 font-bold tracking-widest" : "font-bold tracking-widest"}>
-                                        {timestamp.time} {timestamp.type === 'point' ? "+" + matchConfig.scorePerPoint : timestamp.type === 'retry' ? matchConfig.scorePerRetry : null} <br />
-                                    </span>
-                                </React.Fragment>
-                            ))}
-                        </div>
+    if(teamA && teamB && matchConfig && hotkeys) 
+        return (
+            <div className={`flex flex-col ${isFinished ? 'h-screen' : 'min-h-screen'}`}>
+                {/* Header */}
+                <div className="w-full flex justify-center text-gray-700 h-20 div-top">
+                    <div className="text-5xl bg-red-600 text-white flex items-center justify-center font-bold w-1/3 text-center">
+                        {teamA.name}
                     </div>
-                    <div className="flex-row w-2/4 text-3xl">
-                        <table>
-                            <tr className="h-24">
-                                <td className="w-1/3">
-                                    <div className="flex justify-center">
-                                        {winner ? (winner === teamA.id ? <CrownSVG className={"h-12 w-12"}/> : null) : "DRAW"}
-                                    </div>
-                                </td>
-                                <th className="w-1/3">WINNER</th>
-                                <td className="w-1/3">
-                                    <div className="flex justify-center">
-                                        {winner ? (winner === teamB.id ? <CrownSVG className={"h-12 w-12"}/> : null) : "DRAW"}
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="h-24">
-                                <td>
-                                    <div className="flex justify-center">
-                                        {teamAFinishTime ? teamAFinishTime : "DNF"}
-                                    </div>
-                                </td>
-                                <th>WAKTU FINISH</th>
-                                <td>
-                                    <div className="flex justify-center">
-                                        {teamBFinishTime ? teamBFinishTime : "DNF"}
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="h-24">
-                                <td>
-                                    <div className="flex justify-center">
-                                        {pointsTeamA} / {matchConfig.maxPoints}
-                                    </div>
-                                </td>
-                                <th>POIN DIAMBIL</th>
-                                <td>
-                                    <div className="flex justify-center">
-                                        {pointsTeamB} / {matchConfig.maxPoints}
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="h-24">
-                                <td>
-                                    <div className="flex justify-center">
-                                        {checkpointsTeamA} / {matchConfig.maxCheckpoints}
-                                    </div>
-                                </td>
-                                <th>CHECKPOINT DIAMBIL</th>
-                                <td>
-                                    <div className="flex justify-center">
-                                        {checkpointsTeamB} / {matchConfig.maxCheckpoints}
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="h-24">
-                                <td>
-                                    <div className="flex justify-center">
-                                        {retriesTeamA}
-                                    </div>
-                                </td>
-                                <th>JUMLAH RETRY</th>
-                                <td>
-                                    <div className="flex justify-center">
-                                        {retriesTeamB}
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="h-24">
-                                <td>
-                                    <div className="flex justify-center">
-                                        {scoresTeamA}
-                                    </div>
-                                </td>
-                                <th>SCORE AKHIR</th>
-                                <td>
-                                <div className="flex justify-center">
-                                        {scoresTeamB}
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                        <div className="flex justify-center w-full py-10">
-                            <button className="bg-blue-500 font-bold text-white rounded-xl px-4 py-2 mx-4" onClick={() => handleSave()}>SIMPAN</button>
-                            <button className="bg-red-600 font-bold text-white rounded-xl px-4 py-2 mx-4" onClick={() => handleReset()}>ULANG</button>
-                        </div>
-                    </div>
-                    <div className="w-1/4 bg-white-100 px-10 flex justify-center">
-                        <div>
-                            {timestamps.filter((timestamp) => timestamp.team === 'B').map((timestamp) => (
-                                <React.Fragment key={timestamp.time}>
-                                    <span className="bg-blue-600 rounded-lg px-2 mx-4 font-bold text-white text-sm ">[ TEAM {timestamp.team} ] </span>
-                                    <span className={timestamp.type === 'point' ? "text-green-600 font-bold tracking-widest" : timestamp.type === 'retry' ? "text-red-600 font-bold tracking-widest" : "font-bold tracking-widest"}>
-                                        {timestamp.time} {timestamp.type === 'point' ? "+" + matchConfig.scorePerPoint : timestamp.type === 'retry' ? matchConfig.scorePerRetry : null} <br />
-                                    </span>
-                                </React.Fragment>
-                            ))}
-                        </div>
+                    <Stopwatch 
+                        isRunning={isRunning}
+                        isFinished={isFinished}
+                        time={time}
+                        timerType={timerType}
+                        pointsTeamA={pointsTeamA}
+                        pointsTeamB={pointsTeamB}
+                        checkpointsTeamA={checkpointsTeamA}
+                        checkpointsTeamB={checkpointsTeamB}
+                        matchConfig={matchConfig}
+                        hotkeys={hotkeys}
+                        setIsRunning={setIsRunning}
+                        setIsFinished={setIsFinished}
+                        setTime={setTime}
+                        setTimerType={setTimerType}
+                        setTimestamps={setTimestamps}
+                        setTeamAFinishTime={setTeamAFinishTime}
+                        setTeamBFinishTime={setTeamBFinishTime}
+                        handleReset={handleReset}
+                    />
+                    <div className="text-5xl bg-blue-600 text-white flex items-center justify-center font-bold w-1/3 text-center">
+                        {teamB.name}
                     </div>
                 </div>
-            ) : (
-                <div className="h-full">
 
-                    {/* Body */}
-                    <div className="h-full overflow-y-auto w-full border-8 bg-gray-50 flex justify-center">
-                        <DroidCamFeed />
-                    </div>
-
-                    {/* Footer */}
-                    <div className="w-full h-48 flex div-bottom">
-                        <div className="bg-gray-200 w-1/3 z-10 h-full border-t-8 border-gray-300 flex">
-                            <div className=" w-1/3 h-full bg-red-600 flex items-center justify-center">
-                                <div className="text-white text-7xl font-black">{scoresTeamA}</div>
-                            </div>
-                            <div className="w-2/3 h-full flex flex-col">
-                                <div className="px-4 h-1/6 flex items-end">Checkpoints</div>
-                                <div className="px-4 h-1/6 w-3/4 flex items-center">
-                                    <div className="bg-gray-50 rounded-full h-4 w-full">
-                                        <div className="h-full rounded-lg bg-gray-700" style={checkpointsTeamA ? {width: `${(checkpointsTeamA/matchConfig.maxCheckpoints) * 100}%`} : {width: '5%'}}></div>
-                                    </div>
-                                    <div className="mx-5">
-                                        {checkpointsTeamA}/{matchConfig.maxCheckpoints}
-                                    </div>
-                                </div>
-                                <div className="px-4 h-1/6 flex items-end">Points</div>
-                                <div className="px-4 h-1/6 w-3/4 flex items-center">
-                                    <div className="bg-gray-50 rounded-full h-4 w-full">
-                                        <div className="h-full rounded-lg bg-green-600" style={pointsTeamA ? {width: `${(pointsTeamA/matchConfig.maxPoints) * 100}%`} : {width: '5%'}}></div>
-                                    </div>
-                                    <div className="mx-5">
-                                        {pointsTeamA}/{matchConfig.maxPoints}
-                                    </div>
-                                </div>
-                                <div className="px-4 h-1/6">Retries</div>
-                                <div className="px-4 h-1/6 w-3/4">
-                                    <div className="font-bold text-2xl text-red-600">{retriesTeamA}</div>
-                                </div>
+                {isFinished ? (
+                    <div className="py-10 bg-gray-100 w-full h-full flex justify-center overflow-scroll">
+                        <div className="w-1/4 bg-white-100 px-10 flex justify-center">
+                            <div>
+                                {timestamps.filter((timestamp) => timestamp.team === 'A').map((timestamp) => (
+                                    <React.Fragment key={timestamp.time}>
+                                        <span className="bg-red-600 rounded-lg px-2 mx-4 font-bold text-white text-sm">[ TEAM {timestamp.team} ] </span>
+                                        <span className={timestamp.type === 'point' ? "text-green-600 font-bold tracking-widest" : timestamp.type === 'retry' ? "text-red-600 font-bold tracking-widest" : "font-bold tracking-widest"}>
+                                            {timestamp.time} {timestamp.type === 'point' ? "+" + matchConfig.scorePerPoint : timestamp.type === 'retry' ? matchConfig.scorePerRetry : null} <br />
+                                        </span>
+                                    </React.Fragment>
+                                ))}
                             </div>
                         </div>
-                        <div className="bg-gray-50 w-1/3 z-10 h-full border-t-8 border-gray-300 py-5 px-2">
-                            <Timestamps timestamps={timestamps} matchConfig={matchConfig} />
+                        <div className="flex-row w-2/4 text-3xl">
+                            <table>
+                                <tr className="h-24">
+                                    <td className="w-1/3">
+                                        <div className="flex justify-center">
+                                            {winner ? (winner === teamA.id ? <CrownSVG className={"h-12 w-12"}/> : null) : "DRAW"}
+                                        </div>
+                                    </td>
+                                    <th className="w-1/3">WINNER</th>
+                                    <td className="w-1/3">
+                                        <div className="flex justify-center">
+                                            {winner ? (winner === teamB.id ? <CrownSVG className={"h-12 w-12"}/> : null) : "DRAW"}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr className="h-24">
+                                    <td>
+                                        <div className="flex justify-center">
+                                            {teamAFinishTime ? teamAFinishTime : "DNF"}
+                                        </div>
+                                    </td>
+                                    <th>WAKTU FINISH</th>
+                                    <td>
+                                        <div className="flex justify-center">
+                                            {teamBFinishTime ? teamBFinishTime : "DNF"}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr className="h-24">
+                                    <td>
+                                        <div className="flex justify-center">
+                                            {pointsTeamA} / {matchConfig.maxPoints}
+                                        </div>
+                                    </td>
+                                    <th>POIN DIAMBIL</th>
+                                    <td>
+                                        <div className="flex justify-center">
+                                            {pointsTeamB} / {matchConfig.maxPoints}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr className="h-24">
+                                    <td>
+                                        <div className="flex justify-center">
+                                            {checkpointsTeamA} / {matchConfig.maxCheckpoints}
+                                        </div>
+                                    </td>
+                                    <th>CHECKPOINT DIAMBIL</th>
+                                    <td>
+                                        <div className="flex justify-center">
+                                            {checkpointsTeamB} / {matchConfig.maxCheckpoints}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr className="h-24">
+                                    <td>
+                                        <div className="flex justify-center">
+                                            {retriesTeamA}
+                                        </div>
+                                    </td>
+                                    <th>JUMLAH RETRY</th>
+                                    <td>
+                                        <div className="flex justify-center">
+                                            {retriesTeamB}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr className="h-24">
+                                    <td>
+                                        <div className="flex justify-center">
+                                            {scoresTeamA}
+                                        </div>
+                                    </td>
+                                    <th>SCORE AKHIR</th>
+                                    <td>
+                                    <div className="flex justify-center">
+                                            {scoresTeamB}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div className="flex justify-center w-full py-10">
+                                <button className="bg-blue-500 font-bold text-white rounded-xl px-4 py-2 mx-4" onClick={() => handleSave()}>SIMPAN</button>
+                                <button className="bg-red-600 font-bold text-white rounded-xl px-4 py-2 mx-4" onClick={() => handleReset()}>ULANG</button>
+                            </div>
                         </div>
-                        <div className="bg-gray-200 w-1/3 z-10 h-full border-t-8 border-gray-300 flex">
-                            <div className="w-2/3 h-full flex justify-end">
-                                <div className="w-3/4 h-full flex-row">
+                        <div className="w-1/4 bg-white-100 px-10 flex justify-center">
+                            <div>
+                                {timestamps.filter((timestamp) => timestamp.team === 'B').map((timestamp) => (
+                                    <React.Fragment key={timestamp.time}>
+                                        <span className="bg-blue-600 rounded-lg px-2 mx-4 font-bold text-white text-sm ">[ TEAM {timestamp.team} ] </span>
+                                        <span className={timestamp.type === 'point' ? "text-green-600 font-bold tracking-widest" : timestamp.type === 'retry' ? "text-red-600 font-bold tracking-widest" : "font-bold tracking-widest"}>
+                                            {timestamp.time} {timestamp.type === 'point' ? "+" + matchConfig.scorePerPoint : timestamp.type === 'retry' ? matchConfig.scorePerRetry : null} <br />
+                                        </span>
+                                    </React.Fragment>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="h-full">
+
+                        {/* Body */}
+                        <div className="h-full overflow-y-auto w-full border-8 bg-gray-50 flex justify-center">
+                            <DroidCamFeed />
+                        </div>
+
+                        {/* Footer */}
+                        <div className="w-full h-48 flex div-bottom">
+                            <div className="bg-gray-200 w-1/3 z-10 h-full border-t-8 border-gray-300 flex">
+                                <div className=" w-1/3 h-full bg-red-600 flex items-center justify-center">
+                                    <div className="text-white text-7xl font-black">{scoresTeamA}</div>
+                                </div>
+                                <div className="w-2/3 h-full flex flex-col">
                                     <div className="px-4 h-1/6 flex items-end">Checkpoints</div>
-                                    <div className="px-4 h-1/6 w-full flex items-center">
+                                    <div className="px-4 h-1/6 w-3/4 flex items-center">
                                         <div className="bg-gray-50 rounded-full h-4 w-full">
-                                            <div className="h-full rounded-lg bg-gray-700" style={checkpointsTeamB ? {width: `${(checkpointsTeamB/matchConfig.maxCheckpoints) * 100}%`} : {width: '5%'}}></div>
+                                            <div className="h-full rounded-lg bg-gray-700" style={checkpointsTeamA ? {width: `${(checkpointsTeamA/matchConfig.maxCheckpoints) * 100}%`} : {width: '5%'}}></div>
                                         </div>
                                         <div className="mx-5">
-                                            {checkpointsTeamB}/{matchConfig.maxCheckpoints}
+                                            {checkpointsTeamA}/{matchConfig.maxCheckpoints}
                                         </div>
                                     </div>
                                     <div className="px-4 h-1/6 flex items-end">Points</div>
-                                        <div className="px-4 h-1/6 w-full flex items-center">
-                                            <div className="bg-gray-50 rounded-full h-4 w-full">
-                                                <div className="h-full rounded-lg bg-green-600" style={pointsTeamB ? {width: `${(pointsTeamB/matchConfig.maxPoints) * 100}%`} : {width: '5%'}}></div>
-                                            </div>
-                                            <div className="mx-5">
-                                                {pointsTeamB}/{matchConfig.maxPoints}
-                                            </div>
+                                    <div className="px-4 h-1/6 w-3/4 flex items-center">
+                                        <div className="bg-gray-50 rounded-full h-4 w-full">
+                                            <div className="h-full rounded-lg bg-green-600" style={pointsTeamA ? {width: `${(pointsTeamA/matchConfig.maxPoints) * 100}%`} : {width: '5%'}}></div>
                                         </div>
+                                        <div className="mx-5">
+                                            {pointsTeamA}/{matchConfig.maxPoints}
+                                        </div>
+                                    </div>
                                     <div className="px-4 h-1/6">Retries</div>
-                                    <div className="px-4 h-1/6 w-full">
-                                    <div className="font-bold text-2xl text-red-600">{retriesTeamB}</div>
+                                    <div className="px-4 h-1/6 w-3/4">
+                                        <div className="font-bold text-2xl text-red-600">{retriesTeamA}</div>
                                     </div>
                                 </div>
                             </div>
-                            <div className=" w-1/3 h-full bg-blue-600 flex items-center justify-center">
-                                <div className="text-white text-7xl font-black">{scoresTeamB}</div>
+                            <div className="bg-gray-50 w-1/3 z-10 h-full border-t-8 border-gray-300 py-5 px-2">
+                                <Timestamps timestamps={timestamps} matchConfig={matchConfig} />
+                            </div>
+                            <div className="bg-gray-200 w-1/3 z-10 h-full border-t-8 border-gray-300 flex">
+                                <div className="w-2/3 h-full flex justify-end">
+                                    <div className="w-3/4 h-full flex-row">
+                                        <div className="px-4 h-1/6 flex items-end">Checkpoints</div>
+                                        <div className="px-4 h-1/6 w-full flex items-center">
+                                            <div className="bg-gray-50 rounded-full h-4 w-full">
+                                                <div className="h-full rounded-lg bg-gray-700" style={checkpointsTeamB ? {width: `${(checkpointsTeamB/matchConfig.maxCheckpoints) * 100}%`} : {width: '5%'}}></div>
+                                            </div>
+                                            <div className="mx-5">
+                                                {checkpointsTeamB}/{matchConfig.maxCheckpoints}
+                                            </div>
+                                        </div>
+                                        <div className="px-4 h-1/6 flex items-end">Points</div>
+                                            <div className="px-4 h-1/6 w-full flex items-center">
+                                                <div className="bg-gray-50 rounded-full h-4 w-full">
+                                                    <div className="h-full rounded-lg bg-green-600" style={pointsTeamB ? {width: `${(pointsTeamB/matchConfig.maxPoints) * 100}%`} : {width: '5%'}}></div>
+                                                </div>
+                                                <div className="mx-5">
+                                                    {pointsTeamB}/{matchConfig.maxPoints}
+                                                </div>
+                                            </div>
+                                        <div className="px-4 h-1/6">Retries</div>
+                                        <div className="px-4 h-1/6 w-full">
+                                        <div className="font-bold text-2xl text-red-600">{retriesTeamB}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className=" w-1/3 h-full bg-blue-600 flex items-center justify-center">
+                                    <div className="text-white text-7xl font-black">{scoresTeamB}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
-    )
+                )}
+            </div>
+        )
+    else    
+        return(<div></div>)
 }
 
 const Stopwatch = ({
@@ -422,7 +409,7 @@ const Stopwatch = ({
           clearInterval(timer);
         };
 
-      }, [timerType, time, isRunning]);
+      }, [matchConfig, timerType, time, isRunning]);
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -492,7 +479,7 @@ const Stopwatch = ({
         return () => {
             document.removeEventListener("keydown", handleKeyDown)
         }
-    }, [isRunning, time, checkpointsTeamA, checkpointsTeamB])
+    }, [matchConfig, isRunning, time, checkpointsTeamA, checkpointsTeamB])
 
     useEffect(() => {
         if ((checkpointsTeamA === matchConfig.maxCheckpoints && checkpointsTeamB === matchConfig.maxCheckpoints) || time >= matchConfig.maxElapsedTime) {
@@ -625,6 +612,18 @@ const Pertandingan = ({
     const [teamA, setTeamA] = useState([])
     const [teamB, setTeamB] = useState([])
     const [match, setMatch] = useState([])
+    const [matchConfig, setMatchConfig] = useState([])
+    const [hotkeys, setHotkeys] = useState([])
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            const settings = await getSettings()
+            setMatchConfig(settings.matchConfig)
+            setHotkeys(settings.hotkeys)
+        }
+
+        fetchSettings()
+    }, [])
 
     useEffect (() => {
         const fetchMatch = async () => {
@@ -637,7 +636,6 @@ const Pertandingan = ({
 
     useEffect (() => {
         const fetchTeams = async () => {
-            console.info(match)
             if(match) {
                 const teamA = await getTeamsData(match.team_a)
                 const teamB = await getTeamsData(match.team_b)
@@ -659,6 +657,8 @@ const Pertandingan = ({
                 teamA={teamA}
                 teamB={teamB} 
                 movePage={movePage}
+                matchConfig={matchConfig}
+                hotkeys={hotkeys}
             />
         </div>
     )

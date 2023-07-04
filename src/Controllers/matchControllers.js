@@ -1,4 +1,4 @@
-const apiUrl = "http://localhost:3030/matches"
+const apiUrl = "http://localhost:3090/matches"
 
 export const getMatchesData = async (matchId) => {
     let url = `${apiUrl}`
