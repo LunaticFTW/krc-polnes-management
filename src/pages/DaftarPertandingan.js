@@ -196,7 +196,7 @@ const MatchesTable = ({
                                                     {match.match_result[0].winner === match.team_b ? <CrownSVG className={"w-12"} /> : null}
                                                 </div>
                                             </div>
-                                        : getTeamName(match.team_a, teams)}
+                                        : getTeamName(match.team_b, teams)}
                                         </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-center">
                                         {match.match_result[0] ? (

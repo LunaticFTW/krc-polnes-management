@@ -1,6 +1,6 @@
 import React from 'react'
 const CrownSVG = ({ className }) => (
-	<div className={`w-full h-full ${className}`}>
+	<div className={`${className}`}>
 		<svg
 			className="w-full h-full"
 			fill="#000000"

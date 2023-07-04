@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { getMatchesData, updateMatchData } from "../scripts/matchControllers"
-import { getTeamsData } from "../scripts/teamControllers"
-import Navbar from "./Navbar"
+import { getTeamsData, updateTeamData } from "../scripts/teamControllers"
 import CrownSVG from "../images/crown"
 
 const Content = ({
@@ -25,6 +24,7 @@ const Content = ({
     const [winner, setWinner] = useState(0)
     const [teamAFinishTime, setTeamAFinishTime] = useState(0)
     const [teamBFinishTime, setTeamBFinishTime] = useState(0)
+    const [timerType, setTimerType] = useState('Countdown');
 
     const matchConfig = {
         scorePerPoint: 5,
@@ -121,9 +121,24 @@ const Content = ({
             "scoresTeamB": scoresTeamB,
             "timestamps": timestamps
         }]
+        teamA.matches_history.push(match.id);
+        teamB.matches_history.push(match.id);
         match.match_result = result
+        console.info(teamA)
         await updateMatchData(match.id, match)
+        await updateTeamData(teamA.id, teamA)
+        await updateTeamData(teamB.id, teamB)
         movePage('daftar-pertandingan')
+    }
+
+    const handleReset = () => {
+        setTime(0)
+        setIsRunning(false)
+        setTimestamps([])
+        setTimerType("Countdown")
+        setIsFinished(false)
+        setTeamAFinishTime(0)
+        setTeamBFinishTime(0)
     }
 
     return (
@@ -137,6 +152,7 @@ const Content = ({
                     isRunning={isRunning}
                     isFinished={isFinished}
                     time={time}
+                    timerType={timerType}
                     pointsTeamA={pointsTeamA}
                     pointsTeamB={pointsTeamB}
                     checkpointsTeamA={checkpointsTeamA}
@@ -146,9 +162,11 @@ const Content = ({
                     setIsRunning={setIsRunning}
                     setIsFinished={setIsFinished}
                     setTime={setTime}
+                    setTimerType={setTimerType}
                     setTimestamps={setTimestamps}
                     setTeamAFinishTime={setTeamAFinishTime}
                     setTeamBFinishTime={setTeamBFinishTime}
+                    handleReset={handleReset}
                 />
                 <div className="text-5xl bg-blue-600 text-white flex items-center justify-center font-bold w-1/3 text-center">
                     {teamB.name}
@@ -252,7 +270,7 @@ const Content = ({
                         </table>
                         <div className="flex justify-center w-full py-10">
                             <button className="bg-blue-500 font-bold text-white rounded-xl px-4 py-2 mx-4" onClick={() => handleSave()}>SIMPAN</button>
-                            <button className="bg-red-600 font-bold text-white rounded-xl px-4 py-2 mx-4">ULANG</button>
+                            <button className="bg-red-600 font-bold text-white rounded-xl px-4 py-2 mx-4" onClick={() => handleReset()}>ULANG</button>
                         </div>
                     </div>
                     <div className="w-1/4 bg-white-100 px-10 flex justify-center">
@@ -352,6 +370,7 @@ const Stopwatch = ({
     isRunning,
     isFinished,
     time,
+    timerType,
     pointsTeamA,
     pointsTeamB,
     checkpointsTeamA,
@@ -360,12 +379,14 @@ const Stopwatch = ({
     hotkeys,
     setIsRunning,
     setTime,
+    setTimerType,
     setTimestamps,
     setIsFinished,
     setTeamAFinishTime,
-    setTeamBFinishTime
+    setTeamBFinishTime,
+    handleReset
 }) => {
-    const [timerType, setTimerType] = useState('Countdown');
+    
 
     useEffect(() => {
         let timer = null;
@@ -479,16 +500,6 @@ const Stopwatch = ({
             setIsFinished(true)
         }
     }, [checkpointsTeamA, checkpointsTeamB, time])
-    
-    const handleReset = () => {
-        setTime(0)
-        setIsRunning(false)
-        setTimestamps([])
-        setTimerType("Countdown")
-        setIsFinished(false)
-        setTeamAFinishTime(0)
-        setTeamBFinishTime(0)
-    }
     
     const formatTime = (time) => {
         const minutes = Math.floor(time / 60000)

@@ -168,7 +168,11 @@ const Row = ({
             <td className="px-6 py-4 whitespace-nowrap">{team.id}</td>
             <td className="px-6 py-4 whitespace-nowrap">{team.name}</td>
             <td className="px-6 py-4 whitespace-nowrap">{team.community}</td>
-            <td className="px-6 py-4 whitespace-nowrap">{team.matches_history}</td>
+            <td className="px-6 py-4 whitespace-nowrap">{team.matches_history ? team.matches_history.map((history, index) => { return (
+                <React.Fragment key={history}>
+                    <span>{history}{index !== team.matches_history.length - 1 ? ", " : null}</span>
+                </React.Fragment>
+            )}) : null }</td>
             <td className="px-6 py-4 whitespace-nowrap">
                 <button className="text-white font-bold rounded-xl bg-gray-700 py-2 px-4 mx-2" onClick={handleEdit}>
                     Ubah
@@ -180,7 +184,6 @@ const Row = ({
         </tr>
     )
 }
-
 
 const RowOnDelete = ({
     onDelete,
